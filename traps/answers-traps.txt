@@ -1,0 +1,36 @@
+（1）首先执行
+$ make fs.img
+用于生成call.asm文件。
+
+（2）Which registers contain arguments to functions? For example, which register holds 13 in main's call to printf?
+答：
+
+a0~a7储存函数参数，例如`printf`的13寄存在a2寄存器中。
+
+（3）Where is the call to function f in the assembly code for main? Where is the call to g? (Hint: the compiler may inline functions.)
+答：
+同样从上段代码中可以看出printf()函数对于f函数的调用直接获得了12这一结果，所以在这里对f函数进行了内联优化处理。
+
+在函数f中调用了函数g，同样可以看出这里的g函数也进行了内联优化处理。
+
+（4）At what address is the function printf located?
+答：printf位于0x628的位置。
+
+（5）What value is in the register ra just after the jalr to printf in main ?
+答：ra存储的是printf函数的返回地址，ra=pc+4=0x34+4=0x38
+
+（6）Run the following code.
+
+	unsigned int i = 0x00646c72;
+	printf("H%x Wo%s", 57616, &i);
+      
+What is the output? Here's an ASCII table that maps bytes to characters.
+The output depends on that fact that the RISC-V is little-endian. If the RISC-V were instead big-endian what would you set i to in order to yield the same output? Would you need to change 57616 to a different value?
+答：output为Hello World，57616使用十六进制标识，无符号整型i使用字符串的形式输出，由于RISC-V是小端，所以对应的字符为'0x72','0x6c','0x64'
+如果RISC-V是大端，上述代码需要输出同样的结果，那么需要把i设为0x726c6400，不需要改变57616的值
+
+（7）In the following code, what is going to be printed after 'y='? (note: the answer is not a specific value.) Why does this happen?
+
+	printf("x=%d y=%d", 3);
+
+答：在printf函数中未写明y之后%d所对应的值，所以输出的答案不确定，取决于寄存器中存储的值。
